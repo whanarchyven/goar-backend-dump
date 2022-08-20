@@ -1,0 +1,19 @@
+image: "python:3.9"
+
+stages:
+   - Deploy
+
+deploy_dev:
+  image: docker/compose
+  stage: Deploy
+  tags:
+    - deploy
+  script:
+    - pwd
+    - ls -la
+    - docker-compose down
+    - docker-compose up -d --build
+    - docker ps
+    - docker logs backend
+  only:
+    - master

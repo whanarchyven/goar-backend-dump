@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  db:
+    image: library/postgres:11.1-alpine
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    container_name: db
+    network_mode: "bridge"
+    volumes:
+      - /home/fileserver/pg:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=saleor
+      - POSTGRES_PASSWORD=saleor
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    #command: daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: backend
+    volumes:
+      - ./backend/:/app/backend/
+      - /home/fileserver/fitness/media/:/app/backend/media/
+      - /home/fileserver/fitness/static/:/app/backend/static/
+    network_mode: "bridge"
+    depends_on:
+      - db
+    links:
+      - db
+    expose:
+      - 8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=fitnrss.settings
+      - IS_SERVER=1
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+      args:
+        - project_env=dev
+    container_name: nginx
+    restart: always
+    network_mode: "bridge"
+    volumes:
+      - ./backend/:/app/backend/
+      - /home/fileserver/fitness/media/:/app/backend/media/
+      - /home/fileserver/fitness/static/:/app/backend/static/
+    depends_on:
+      - backend
+    links:
+      - backend
+    ports:
+      - 80:80
+      - 8000:8000
