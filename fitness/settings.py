@@ -102,7 +102,7 @@ if os.getenv('IS_SERVER') == '1':
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
             'HOST': 'localhost',
-            'PORT': '',
+            'PORT': '5434',
         }
     }
 else:
