@@ -6,6 +6,8 @@ from rest_framework.viewsets import GenericViewSet
 
 from courses.models import CourseDay
 from courses.serialisers import CourseDaySerializer, CourseDayTaskUserSerializer
+from diary.models import ClassDayDiary
+from diary.serialisers import ClassDayDiaryUpdateSerializer
 
 
 class CourseDayViewSet(
@@ -36,3 +38,22 @@ class CourseDayViewSet(
         if done:
             return Response(status=status.HTTP_201_CREATED, data=serializer.data)
         return Response(status=status.HTTP_204_NO_CONTENT, data=serializer.data)
+
+    @action(detail=True, methods=["post"],
+            permission_classes=(IsAuthenticated,),
+            url_path="update-user-dairy-day",
+            serializer_class=ClassDayDiaryUpdateSerializer)
+    def update_user_dairy_day(self, request, pk=None):
+        """ Обновить дневник пользователя на этот день курса. """
+        instance, created = ClassDayDiary.objects.get_or_create(
+            user=request.user,
+            course_day=CourseDay.objects.get(id=pk)
+        )
+        serializer = self.serializer_class(
+            instance=instance,
+            data=request.data,
+            context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK, data=serializer.data)

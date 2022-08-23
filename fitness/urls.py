@@ -26,6 +26,7 @@ from cart.urls import router as cart_router
 from training.urls import router as training_router
 from courses.urls import router as courses_router
 from users.urls import router as users_router
+from diary.urls import router as dairy_router
 
 router = DefaultRouter()
 router.registry.extend(food_router.registry)
@@ -33,6 +34,7 @@ router.registry.extend(cart_router.registry)
 router.registry.extend(training_router.registry)
 router.registry.extend(courses_router.registry)
 router.registry.extend(users_router.registry)
+router.registry.extend(dairy_router.registry)
 
 auth_urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

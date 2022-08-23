@@ -8,6 +8,7 @@ class CourseDay(models.Model):
     """День курса."""
     number = models.PositiveIntegerField("Номер дня")
     date_of_day = models.DateField("Дата")
+    tip_of_the_day = models.TextField("Совет дня", blank=True, null=True)
 
     def __str__(self):
         return f" День {self.number}"
