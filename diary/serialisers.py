@@ -1,3 +1,5 @@
+from typing import Union
+
 from rest_framework import serializers
 
 from courses.models import CourseDay
@@ -61,7 +63,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_water(self, obj) -> bool | int:
+    def get_water(self, obj) -> Union[bool, int]:
         """Количество выпитой воды в мл"""
         try:
             dairy_day = obj.dairy.get(
@@ -81,7 +83,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_mood(self, obj) -> str | bool:
+    def get_mood(self, obj) -> Union[bool, str]:
         """Настроение"""
         try:
             dairy_day = obj.dairy.get(
@@ -111,7 +113,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_weight(self, obj) -> bool | int:
+    def get_weight(self, obj) -> Union[bool, int]:
         """Вес"""
         try:
             dairy_day = obj.dairy.get(
@@ -121,7 +123,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_waist_circumference(self, obj) -> bool | int:
+    def get_waist_circumference(self, obj) -> Union[bool, int]:
         """ОТ"""
         try:
             dairy_day = obj.dairy.get(
@@ -131,7 +133,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_hip_circumference(self, obj) -> bool | int:
+    def get_hip_circumference(self, obj) -> Union[bool, int]:
         """ОБ"""
         try:
             dairy_day = obj.dairy.get(
@@ -141,7 +143,7 @@ class ClassDayDiarySerializer(serializers.ModelSerializer):
         except ClassDayDiary.DoesNotExist:
             return False
 
-    def get_chest_volume(self, obj) -> bool | int:
+    def get_chest_volume(self, obj) -> Union[bool, int]:
         """ОТ"""
         try:
             dairy_day = obj.dairy.get(
