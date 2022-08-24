@@ -258,7 +258,7 @@ if os.getenv('IS_SERVER') == '1':
         'default': {
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
-                "hosts": [(f"redis://user:{os.getenv('REDIS_PASS')}@91.218.230.186:6379/0")],
+                "hosts": [(f"redis://user:{os.getenv('REDIS_PASS')}@127.0.0.1:6379/0")],
             },
         },
     }
