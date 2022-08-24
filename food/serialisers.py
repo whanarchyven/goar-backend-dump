@@ -1,7 +1,7 @@
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from rest_framework import serializers
 
-from food.models import Recipe, RecipeProduct, Product, Favorite
+from food.models import Recipe, RecipeProduct, Product, Favorite, FoodIntake
 
 
 class ThumbnailSerializer(serializers.ImageField):
@@ -79,3 +79,26 @@ class ToggleFavoriteSerializer(serializers.Serializer):
             )
             created = True
         return created
+
+
+class FoodIntakeAddSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = FoodIntake
+        fields = '__all__'
+
+
+class RecipeFoodIntakeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ['id', 'name', 'recipe_type', 'calories', 'protein',
+                  'fats', 'carbohydrates']
+
+class FoodIntakeListSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    recipe = RecipeFoodIntakeSerializer(read_only=True)
+
+    class Meta:
+        model = FoodIntake
+        fields = '__all__'

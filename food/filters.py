@@ -1,11 +1,8 @@
 from django_filters import NumberFilter, ModelChoiceFilter
 from django_filters.rest_framework import FilterSet, BooleanFilter
 
-from food.models import Recipe, Favorite
+from food.models import Recipe, Favorite, FoodIntake
 
-filterset_fields = ['recipe_type', 'satisfying',
-                    'sweet', 'simple', 'exquisite', 'speed',
-                    'calories', ]
 
 class RecipeFilter(FilterSet):
     calories = NumberFilter(field_name='calories', lookup_expr='lte')
@@ -35,3 +32,12 @@ class RecipeFilter(FilterSet):
             })
         return queryset
 
+
+
+class FoodIntakeFilter(FilterSet):
+
+    class Meta:
+        model = FoodIntake
+        fields = {
+            "course_day__id": ['exact'],
+        }

@@ -21,6 +21,8 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
+from chat.views import ChatMessageViewSet
 from food.urls import router as food_router
 from cart.urls import router as cart_router
 from training.urls import router as training_router
@@ -35,6 +37,7 @@ router.registry.extend(training_router.registry)
 router.registry.extend(courses_router.registry)
 router.registry.extend(users_router.registry)
 router.registry.extend(dairy_router.registry)
+router.register("chat-message", ChatMessageViewSet, basename='chat-message')
 
 auth_urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -45,6 +48,7 @@ auth_urlpatterns = [
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/', include(auth_urlpatterns)),
+    path('ws/', include('chat.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # swagger

@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from cart.views import CartViewSet, CartProductViewSet
+from cart.views import CartViewSet
 
 router = DefaultRouter()
 

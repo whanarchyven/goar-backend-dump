@@ -50,13 +50,15 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'easy_thumbnails',
+    'channels',
 
     'users',
     'food',
     'cart',
     'training',
     'courses',
-    'diary'
+    'diary',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -76,7 +78,10 @@ ROOT_URLCONF = 'fitness.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'chat/templates'
+                 ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -247,3 +252,20 @@ THUMBNAIL_ALIASES = {
         'small': {'size': (124, 124), 'quality': 100},
     },
 }
+ASGI_APPLICATION = "fitness.asgi.application"
+if os.getenv('IS_SERVER') == '1':
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [(f"redis://user:{os.getenv('REDIS_PASS')}@91.218.230.186:6379/0")],
+            },
+        },
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
+
