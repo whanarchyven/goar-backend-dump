@@ -9,7 +9,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from food.filters import RecipeFilter, FoodIntakeFilter
 from food.models import Recipe, FoodIntake
-from food.permissions import IsFoodIntake
+from food.permissions import IsFoodIntakeOwner
 from food.serialisers import RecipeSerializer, ToggleFavoriteSerializer, FoodIntakeAddSerializer, \
     FoodIntakeListSerializer
 
@@ -57,10 +57,11 @@ class FoodIntakeViewSet(ModelViewSet):
     serializer_class = FoodIntakeAddSerializer
     queryset = FoodIntake.objects.select_related("recipe")
     http_method_names = ("get", "post", "patch", "delete")
-    permission_classes = [IsAuthenticated, IsFoodIntake]
+    permission_classes = [IsAuthenticated, IsFoodIntakeOwner]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = FoodIntakeFilter
 
     def list(self, request, *args, **kwargs):
+        self.queryset = FoodIntake.objects.select_related("recipe").filter(user=request.user)
         self.serializer_class = FoodIntakeListSerializer
         return super().list(request, args, kwargs)

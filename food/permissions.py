@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsFoodIntake(permissions.BasePermission):
+class IsFoodIntakeOwner(permissions.BasePermission):
     """
     Если это прием пищи пользователя.
     """
