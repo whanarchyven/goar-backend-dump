@@ -24,7 +24,7 @@ class CourseDaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseDay
-        fields = ['id', 'number', 'date_of_day', 'tasks']
+        fields = ['id', 'number', 'date_of_day', 'tasks', 'tip_of_the_day']
 
 
 class CourseDayTaskUserSerializer(serializers.Serializer):
