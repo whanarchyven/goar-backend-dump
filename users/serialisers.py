@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from users.models import Profile
 User = get_user_model()
@@ -55,6 +56,11 @@ class RegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     first_name = serializers.CharField(max_length=100)
     phone = serializers.CharField()
+    code = serializers.CharField()
+
+    def validate_code(self, val):
+        if val != "method_goar":
+            raise ValidationError("Неправильный код")
 
     def save(self, **kwargs):
         user = User(

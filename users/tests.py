@@ -4,7 +4,8 @@ def test_register(db, client):
         {
             "email": "vladislah@ya.ru",
             "first_name": "Владислав",
-            "phone": "+79119061531"
+            "phone": "+79119061531",
+            "code": "f"
         }
     )
     assert res.status_code == 201
