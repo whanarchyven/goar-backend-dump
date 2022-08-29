@@ -24,6 +24,10 @@ def user2(django_user_model):
         password="pass"
     )
 
+@pytest.fixture
+def client():
+    return APIClient()
+
 
 @pytest.fixture
 def auth_client(user1):

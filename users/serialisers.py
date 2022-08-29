@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from users.models import Profile
-
+User = get_user_model()
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Профиль пользователя."""
@@ -49,4 +49,22 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ['id', ]
 
+
+class RegistrationSerializer(serializers.Serializer):
+    """Регистрация участника."""
+    email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=100)
+    phone = serializers.CharField()
+
+    def save(self, **kwargs):
+        user = User(
+            first_name=self.validated_data['first_name'],
+            email=self.validated_data['email'],
+            phone=self.validated_data['phone'],
+            is_active=True,
+            is_admin=False,
+        )
+        user.set_password(kwargs['password'])
+        user.save()
+        return user
 

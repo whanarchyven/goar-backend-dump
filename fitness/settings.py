@@ -269,3 +269,13 @@ else:
         }
     }
 
+# Email
+EMAIL_HOST = 'smtp.go1.unisender.ru'
+EMAIL_HOST_USER = '5082747'
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = '6ycqzqtig3k3ywdqpkdfsk8n7p17sj1rb3yc4w3e'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_MAX_RETRY_ATTEMPTS = 3
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
