@@ -3,6 +3,7 @@ import threading
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -32,13 +33,9 @@ def send_email(email, password):
         'email.html'
     )
 
-
-class UserExists(Exception):
-    def __init__(self):
-        self.message = "Пользователь с таким email уже зарегистрирован"
-
-    def __str__(self):
-        return self.message
+class UserExists(APIException):
+    status_code = 400
+    default_detail = 'Пользователь с таким email уже зарегистрирован'
 
 
 class ProfileViewSet(mixins.RetrieveModelMixin,
@@ -69,7 +66,7 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
             User.objects.get(
                 email=request.data['email']
             )
-            return Response(status=status.HTTP_400_BAD_REQUEST, exception=UserExists)
+            raise UserExists
         except User.DoesNotExist:
             serializer.is_valid(raise_exception=True)
             password = User.objects.make_random_password()
