@@ -278,4 +278,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_MAX_RETRY_ATTEMPTS = 3
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
