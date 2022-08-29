@@ -18,7 +18,7 @@ def send_new_user_email(
 
     txt_body = render_to_string(txt_template, context)
 
-    message = EmailMultiAlternatives(subject=subject, body=txt_body, to=[to, ])
+    message = EmailMultiAlternatives(subject=subject, body=txt_body, to=[to, ], from_email="info@skill-app.ru")
 
     if html_template:
         body = render_to_string(html_template, context)
