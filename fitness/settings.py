@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == '1'
 
-ALLOWED_HOSTS = ['91.218.230.186', '127.0.0.1']
+ALLOWED_HOSTS = ['91.218.230.186', '127.0.0.1', 'skill-app.ru']
 
 
 # Application definition
