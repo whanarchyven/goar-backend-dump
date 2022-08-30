@@ -53,7 +53,6 @@ class FitnessUser(AbstractUser):
     phone = models.CharField(
         "Телефон",
         max_length=30,
-        unique=True,
         null=True,
         blank=True
     )
