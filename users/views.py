@@ -61,6 +61,8 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
             serializer_class=RegistrationSerializer)
     def register(self, request):
         """Регистрация нового пользователя."""
+        if 'email' not in request.data:
+            return Response(status=status.HTTP_200_OK)
         serializer = self.serializer_class(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         try:

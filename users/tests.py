@@ -16,4 +16,4 @@ def test_register(db, client):
             "test": ["test"],
         }
     )
-    assert res.status_code == 400
+    assert res.status_code == 200
