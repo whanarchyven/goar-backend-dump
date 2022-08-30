@@ -8,4 +8,12 @@ def test_register(db, client):
             "code": "f"
         }
     )
-    assert res.status_code == 201
+    assert res.status_code == 400
+
+    res = client.post(
+        "/api/profile/register/",
+        {
+            "test": ["test"],
+        }
+    )
+    assert res.status_code == 400

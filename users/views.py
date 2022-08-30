@@ -62,13 +62,13 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
     def register(self, request):
         """Регистрация нового пользователя."""
         serializer = self.serializer_class(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
         try:
             User.objects.get(
                 email=request.data['email']
             )
             raise UserExists
         except User.DoesNotExist:
-            serializer.is_valid(raise_exception=True)
             password = User.objects.make_random_password()
             thread = threading.Thread(target=send_email, args=(
                 request.data['email'],

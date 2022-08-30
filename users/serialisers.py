@@ -53,10 +53,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegistrationSerializer(serializers.Serializer):
     """Регистрация участника."""
-    email = serializers.EmailField()
-    first_name = serializers.CharField(max_length=100)
-    phone = serializers.CharField()
-    code = serializers.CharField()
+    email = serializers.EmailField(required=True)
+    first_name = serializers.CharField(max_length=100, required=True)
+    phone = serializers.CharField(required=True)
+    code = serializers.CharField(required=True)
 
     def validate_code(self, val):
         if val != "method_goar":
