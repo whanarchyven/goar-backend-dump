@@ -153,5 +153,4 @@ class FoodIntake(models.Model):
     class Meta:
         verbose_name = "Прием пищи"
         verbose_name_plural = "Приемы пищи"
-        unique_together = ["user", "recipe_type", "course_day", "recipe"]
 

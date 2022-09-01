@@ -1,6 +1,5 @@
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from food.models import Recipe, RecipeProduct, Product, Favorite, FoodIntake
 
@@ -96,32 +95,19 @@ class RecipeFoodIntakeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'recipe_type', 'calories', 'protein',
                   'fats', 'carbohydrates']
 
+
 class FoodIntakeListSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     recipe = RecipeFoodIntakeSerializer(read_only=True)
 
+    def validate(self, attrs, user):
+        all_for_day = FoodIntake.objects.filter(
+            course_day=attrs['course_day'],
+            user=user
+        ).count()
+        if all_for_day >= 4:
+            raise serializers.ValidationError('Вы можете добавить не более 4 приемов пищи в день.')
+
     class Meta:
         model = FoodIntake
         fields = '__all__'
-
-        # def validate(self, attrs):
-        #     try:
-        #         FoodIntake.objects.get(
-        #             user=attrs['user'],
-        #             recipe_type=attrs['recipe_type'],
-        #
-        #         )
-        #     except FoodIntake.DoesNotExist:
-        #         pass
-        #     else:
-        #         raise serializers.ValidationError('field1 with field2 already exists')
-        #
-        #     return attrs
-        #
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=FoodIntake.objects.all(),
-        #         fields=['user', 'recipe_type', 'course_day', 'recipe__recipe_type']
-        #     )
-        # ]
-
