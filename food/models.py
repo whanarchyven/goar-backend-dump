@@ -1,11 +1,13 @@
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from courses.models import CourseDay
 
 User = get_user_model()
+
 
 def _image_path(instance, filename):
     return '{}/{}/{}/{}/{}'.format(
@@ -15,6 +17,7 @@ def _image_path(instance, filename):
         datetime.now().strftime("%H%M"),
         filename
     )
+
 
 RECIPE_TYPE = [
     ('breakfast', 'Завтрак'),
@@ -27,6 +30,7 @@ SPEED_CHOICES = [
     ('quickly', 'Быстро'),
     ('slowly', 'Без спешки'),
 ]
+
 
 class Product(models.Model):
     """Продукты."""
@@ -149,3 +153,5 @@ class FoodIntake(models.Model):
     class Meta:
         verbose_name = "Прием пищи"
         verbose_name_plural = "Приемы пищи"
+        unique_together = ["user", "recipe_type", "course_day", "recipe"]
+

@@ -65,3 +65,24 @@ class FoodIntakeViewSet(ModelViewSet):
         self.queryset = FoodIntake.objects.select_related("recipe").filter(user=request.user)
         self.serializer_class = FoodIntakeListSerializer
         return super().list(request, args, kwargs)
+
+    # def validate_unique(self, *args, **kwargs):
+    #     super().validate_unique(*args, **kwargs)
+    #     if self.recipe:
+    #         if self.__class__.objects. \
+    #                 filter(user=self.user, recipe_type=self.recipe_type, course_day=self.course_day,
+    #                        recipe__recipe_type=self.recipe.recipe_type). \
+    #                 exists():
+    #             raise ValidationError(
+    #                 message='FoodIntake with this params already exists.',
+    #                 code='unique_together',
+    #             )
+    #     else:
+    #         if self.__class__.objects. \
+    #                 filter(user=self.user, recipe_type=self.recipe_type, course_day=self.course_day). \
+    #                 exists():
+    #             raise ValidationError(
+    #                 message='FoodIntake with this params already exists.',
+    #                 code='unique_together',
+    #             )
+
