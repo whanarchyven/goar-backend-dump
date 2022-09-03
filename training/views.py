@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from training.models import Training
-from training.serialisers import TrainingSerializer, TrainingFavoritesSerializer
+from training.models import Training, Lecture
+from training.serialisers import TrainingSerializer, TrainingFavoritesSerializer, LectureSerializer
 
 
 class TrainingViewSet(mixins.RetrieveModelMixin,
@@ -40,3 +40,14 @@ class TrainingViewSet(mixins.RetrieveModelMixin,
         if favorite:
             return Response(status=status.HTTP_201_CREATED, data=serializer.data)
         return Response(status=status.HTTP_204_NO_CONTENT, data=serializer.data)
+
+
+
+class LectureViewSet(mixins.RetrieveModelMixin,
+                      mixins.ListModelMixin,
+                      GenericViewSet):
+    """ Лекции. """
+    serializer_class = LectureSerializer
+    queryset = Lecture.objects.all()
+    http_method_names = ("get", )
+    permission_classes = [IsAuthenticated, ]

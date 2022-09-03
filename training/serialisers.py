@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from training.models import Training, TrainingFavorite
+from training.models import Training, TrainingFavorite, Lecture
 
 
 class TrainingSerializer(serializers.ModelSerializer):
@@ -37,3 +37,9 @@ class TrainingFavoritesSerializer(serializers.Serializer):
             )
             created = True
         return created
+
+
+class LectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecture
+        fields = '__all__'
