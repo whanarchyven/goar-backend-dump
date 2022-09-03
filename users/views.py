@@ -26,7 +26,7 @@ class UserViewSet(ModelViewSet):
 
 def send_email(email, password):
     send_new_user_email(
-        "Доступ к платформе курса успешно оплачен",
+        "Поздравляю, вы получили доступ к моей программе «Метод Гоар»",
         'email.txt',
         email,
         {"email": email, "password": password},
