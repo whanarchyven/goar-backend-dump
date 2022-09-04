@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-
+from django.contrib.auth.models import User
 from .models import FitnessUser
 
 admin.site.site_header = "Метод Гоар"
@@ -17,8 +17,8 @@ class FitnessUserAdmin(BaseUserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("password", )}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (None, {"fields": ("email", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),
             {
@@ -38,7 +38,11 @@ class FitnessUserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("password1", "password2"),
+                "fields": ("email", "password1", "password2"),
             },
         ),
     )
+
+
+# admin.site.unregister(User)
+admin.site.register(User, FitnessUserAdmin)
