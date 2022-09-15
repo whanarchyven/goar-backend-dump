@@ -4,13 +4,14 @@ from django.contrib.auth import get_user_model
 from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from users.models import Profile
 from users.permissions import IsProfileOwner
-from users.serialisers import UserSerializer, ProfileSerializer, RegistrationSerializer
+from users.serialisers import UserSerializer, ProfileSerializer, RegistrationSerializer, ProfileImageSerializer
 from users.utils import send_new_user_email
 
 User = get_user_model()
@@ -47,12 +48,25 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
     """
     serializer_class = ProfileSerializer
     queryset = Profile.objects.select_related("user")
-    http_method_names = ("get", "patch")
+    http_method_names = ("get", "patch", "post")
     permission_classes = [IsAuthenticated, IsProfileOwner]
     pagination_class = None
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+    @action(detail=False, methods=["post"],
+            url_path="update-profile-image",
+            permission_classes=(IsAuthenticated, ),
+            serializer_class=ProfileImageSerializer)
+    def update_profile_image(self, request):
+        """Обновляет фото профиля. """
+        profile = request.user.profile
+        serializer = self.serializer_class(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
 
     @action(detail=False,
             methods=["POST"],

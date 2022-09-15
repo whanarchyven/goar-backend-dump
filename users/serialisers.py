@@ -51,6 +51,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', ]
 
 
+class ProfileImageSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+    class Meta:
+        model = Profile
+        fields = [
+            'profile_image',
+            'user'
+        ]
+
+
 class RegistrationSerializer(serializers.Serializer):
     """Регистрация участника."""
     email = serializers.EmailField(required=True)
