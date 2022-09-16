@@ -6,7 +6,7 @@ User = get_user_model()
 
 class CourseDay(models.Model):
     """День курса."""
-    number = models.PositiveIntegerField("Номер дня")
+    number = models.PositiveIntegerField("Номер дня", db_index=True)
     date_of_day = models.DateField("Дата")
     tip_of_the_day = models.TextField("Совет дня", blank=True, null=True)
 
