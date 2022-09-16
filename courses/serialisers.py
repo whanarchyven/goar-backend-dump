@@ -33,9 +33,9 @@ class CourseDayTaskUserSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         user = self.context['request'].user
-        course_day_id = self.context['course_day_id']
+        course_day_number = self.context['course_day__number']
         task_id = self.validated_data['task_id']
-        course_day = CourseDay.objects.get(id=course_day_id)
+        course_day = CourseDay.objects.get(number=course_day_number)
         task = Task.objects.get(id=task_id)
         done = False
         try:

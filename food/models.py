@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from courses.models import CourseDay
@@ -153,4 +152,3 @@ class FoodIntake(models.Model):
     class Meta:
         verbose_name = "Прием пищи"
         verbose_name_plural = "Приемы пищи"
-

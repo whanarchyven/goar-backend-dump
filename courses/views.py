@@ -17,21 +17,22 @@ class CourseDayViewSet(
 ):
     """ Дни курса. """
     serializer_class = CourseDaySerializer
-    queryset = CourseDay.objects.prefetch_related("tasks", "task_status")
+    queryset = CourseDay.objects.prefetch_related("tasks", "task_status").order_by("number", "id")
     http_method_names = ("get", "post")
     permission_classes = [IsAuthenticated, ]
+    lookup_field = 'number'
 
     @action(detail=True, methods=["post"],
             permission_classes=(IsAuthenticated,),
             url_path="toggle-task-status",
             serializer_class=CourseDayTaskUserSerializer)
-    def toggle_task_status(self, request, pk=None):
+    def toggle_task_status(self, request, number=None):
         """ Обновить статус выполнения задачи. """
         serializer = self.serializer_class(
             data={
                 "task_id": request.data.get("task_id"),
             },
-            context={"request": request, "course_day_id": pk}
+            context={"request": request, "course_day__number": number}
         )
         serializer.is_valid(raise_exception=True)
         done = serializer.save()
@@ -43,11 +44,11 @@ class CourseDayViewSet(
             permission_classes=(IsAuthenticated,),
             url_path="update-user-dairy-day",
             serializer_class=ClassDayDiaryUpdateSerializer)
-    def update_user_dairy_day(self, request, pk=None):
+    def update_user_dairy_day(self, request, number=None):
         """ Обновить дневник пользователя на этот день курса. """
         instance, created = ClassDayDiary.objects.get_or_create(
             user=request.user,
-            course_day=CourseDay.objects.get(id=pk)
+            course_day=CourseDay.objects.get(number=number)
         )
         serializer = self.serializer_class(
             instance=instance,
