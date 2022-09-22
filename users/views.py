@@ -11,6 +11,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.views import TokenViewBase
 
+from users import login_user
 from users.models import Profile
 from users.permissions import IsProfileOwner
 from users.serialisers import UserSerializer, ProfileSerializer, RegistrationSerializer, ProfileImageSerializer, \
@@ -135,5 +136,5 @@ class CustomTokenObtainPairView(TokenViewBase):
     _serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
 
     def post(self, request, *args, **kwargs):
-        user_logged_in.send(sender=User, request=request, user=request.user)
+        login_user.send(sender=User, request=request, user=request.user)
         return super().post(request, *args, **kwargs)

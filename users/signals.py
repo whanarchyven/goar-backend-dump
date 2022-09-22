@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from cart.models import Cart
+from users import login_user
 from users.models import Profile, UserLoginActivity
 
 User = get_user_model()
@@ -23,7 +24,7 @@ def get_client_ip(request):
     return ip
 
 
-@receiver(user_logged_in)
+@receiver(login_user)
 def log_user_logged_in_success(sender, user, request, **kwargs):
     try:
         user_agent_info = request.META.get('HTTP_USER_AGENT', '<unknown>')[:255],
