@@ -72,6 +72,7 @@ class FoodIntakeViewSet(ModelViewSet):
         return super().create(request, args, kwargs)
 
 
+
 class CustomFoodIntakeViewSet(ModelViewSet):
     """Добавить, удалить, обновить, прием пищи, привязано к дню курса, можно добавить либо
        рецепт, либо вручную ввести калорийность, количество белков жиров и углеводов.
@@ -82,5 +83,9 @@ class CustomFoodIntakeViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsFoodIntakeOwner]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = CustomFoodIntakeFilter
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = CustomFoodIntake.objects.filter(user=request.user)
+        return super().list(request, args, kwargs)
 
 
