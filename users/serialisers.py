@@ -74,6 +74,17 @@ class ProfilePhotoBeforeSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProfilePhotoAfterSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Profile
+        fields = [
+            'photo_before',
+            'user'
+        ]
+
+
 class RegistrationSerializer(serializers.Serializer):
     """Регистрация участника."""
     email = serializers.EmailField(required=True)
