@@ -11,10 +11,19 @@ admin.site.index_title = "Метод Гоар"
 
 @admin.register(FitnessUser)
 class FitnessUserAdmin(BaseUserAdmin):
-    list_display = ("email", "first_name", "last_name", "is_admin")
+    list_display = ("email", "first_name", "last_name", "is_admin", "number_of_devices")
     list_filter = ("is_admin", "is_superuser", "is_active", "groups")
     search_fields = ("first_name", "last_name", "email")
     ordering = ("email",)
+
+    def number_of_devices(self, obj):
+        try:
+            number_of_devices = UserLoginActivity.objects.filter(
+                login_email=obj.email
+            ).distinct("user_agent_info").count()
+        except:
+            number_of_devices = 0
+        return number_of_devices
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
@@ -49,4 +58,5 @@ admin.site.register(User, FitnessUserAdmin)
 
 @admin.register(UserLoginActivity)
 class UserLoginActivityAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("login_email", "login_IP", "user_agent_info", "login_datetime")
+    list_filter = ("login_email", )

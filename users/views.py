@@ -8,6 +8,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.views import TokenViewBase
 
@@ -136,5 +137,12 @@ class CustomTokenObtainPairView(TokenViewBase):
     _serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
 
     def post(self, request, *args, **kwargs):
-        login_user.send(sender=User, request=request, user=request.user)
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+            login_user.send(sender=User, request=request, user=serializer.user)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
