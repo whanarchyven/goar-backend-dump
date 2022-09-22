@@ -29,6 +29,7 @@ from training.urls import router as training_router
 from courses.urls import router as courses_router
 from users.urls import router as users_router
 from diary.urls import router as dairy_router
+from users.views import CustomTokenObtainPairView
 
 router = DefaultRouter()
 router.registry.extend(food_router.registry)
@@ -40,7 +41,7 @@ router.registry.extend(dairy_router.registry)
 router.register("chat-message", ChatMessageViewSet, basename='chat-message')
 
 auth_urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]

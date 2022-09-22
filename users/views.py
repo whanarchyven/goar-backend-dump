@@ -1,6 +1,6 @@
 import threading
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, user_logged_in
 from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
@@ -8,6 +8,8 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework_simplejwt.views import TokenViewBase
 
 from users.models import Profile
 from users.permissions import IsProfileOwner
@@ -122,3 +124,16 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
 
             serializer.save(password=password)
             return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+
+
+class CustomTokenObtainPairView(TokenViewBase):
+    """
+    Takes a set of user credentials and returns an access and refresh JSON web
+    token pair to prove the authentication of those credentials.
+    """
+
+    _serializer_class = api_settings.TOKEN_OBTAIN_SERIALIZER
+
+    def post(self, request, *args, **kwargs):
+        user_logged_in.send(sender=User, request=request, user=request.user)
+        return super().post(request, *args, **kwargs)
