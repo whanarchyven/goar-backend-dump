@@ -152,3 +152,43 @@ class FoodIntake(models.Model):
     class Meta:
         verbose_name = "Прием пищи"
         verbose_name_plural = "Приемы пищи"
+
+
+
+class CustomFoodIntake(models.Model):
+    """ Прием пищи ввод вручную. """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='custom_food_intake')
+    recipe_type = models.CharField(
+        "Тип",
+        choices=RECIPE_TYPE,
+        max_length=20,
+        null=True,
+        blank=True
+    )
+    course_day = models.ForeignKey(
+        CourseDay,
+        on_delete=models.CASCADE
+    )
+    calories = models.PositiveIntegerField(
+        "Калории",
+        default=0
+    )
+    protein = models.PositiveIntegerField(
+        "Белок",
+        default=0
+    )
+    fats = models.PositiveIntegerField(
+        "Жиры",
+        default=0
+    )
+    carbohydrates = models.PositiveIntegerField(
+        "Углеводы",
+        default=0
+    )
+
+    def __str__(self):
+        return f"{self.recipe_type} для {self.course_day.number} дня (Ввод вручную)"
+
+    class Meta:
+        verbose_name = "Прием пищи (Ввод вручную)"
+        verbose_name_plural = "Приемы пищи (Ввод вручную)"

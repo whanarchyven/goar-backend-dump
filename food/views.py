@@ -7,11 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from food.filters import RecipeFilter, FoodIntakeFilter
-from food.models import Recipe, FoodIntake
+from food.filters import RecipeFilter, FoodIntakeFilter, CustomFoodIntakeFilter
+from food.models import Recipe, FoodIntake, CustomFoodIntake
 from food.permissions import IsFoodIntakeOwner
 from food.serialisers import RecipeSerializer, ToggleFavoriteSerializer, FoodIntakeAddSerializer, \
-    FoodIntakeListSerializer
+    FoodIntakeListSerializer, CustomFoodIntakeAddSerializer
 
 
 class RecipeViewSet(mixins.RetrieveModelMixin,
@@ -70,4 +70,17 @@ class FoodIntakeViewSet(ModelViewSet):
         serializer = FoodIntakeListSerializer()
         serializer.validate(request.data, request.user)
         return super().create(request, args, kwargs)
+
+
+class CustomFoodIntakeViewSet(ModelViewSet):
+    """Добавить, удалить, обновить, прием пищи, привязано к дню курса, можно добавить либо
+       рецепт, либо вручную ввести калорийность, количество белков жиров и углеводов.
+       Рецепт имеет приоритет. (Ручной ввод)"""
+    serializer_class = CustomFoodIntakeAddSerializer
+    queryset = CustomFoodIntake.objects.all()
+    http_method_names = ("get", "post", "patch", "delete")
+    permission_classes = [IsAuthenticated, IsFoodIntakeOwner]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = CustomFoodIntakeFilter
+
 

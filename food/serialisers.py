@@ -1,7 +1,7 @@
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from rest_framework import serializers
 
-from food.models import Recipe, RecipeProduct, Product, Favorite, FoodIntake
+from food.models import Recipe, RecipeProduct, Product, Favorite, FoodIntake, CustomFoodIntake
 
 
 class ThumbnailSerializer(serializers.ImageField):
@@ -89,6 +89,24 @@ class FoodIntakeAddSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CustomFoodIntakeAddSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    def validate(self, attrs):
+        all_for_day = FoodIntake.objects.filter(
+            course_day=attrs['course_day'],
+            user=attrs['user']
+        ).count()
+        if all_for_day >= 4:
+            raise serializers.ValidationError('Вы можете добавить не более 4 приемов пищи в день.')
+        return attrs
+
+
+    class Meta:
+        model = CustomFoodIntake
+        fields = '__all__'
+
+
 class RecipeFoodIntakeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
@@ -107,6 +125,7 @@ class FoodIntakeListSerializer(serializers.ModelSerializer):
         ).count()
         if all_for_day >= 4:
             raise serializers.ValidationError('Вы можете добавить не более 4 приемов пищи в день.')
+        return attrs
 
     class Meta:
         model = FoodIntake

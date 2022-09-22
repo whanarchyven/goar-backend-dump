@@ -1,7 +1,7 @@
 from django_filters import NumberFilter, ModelChoiceFilter
 from django_filters.rest_framework import FilterSet, BooleanFilter
 
-from food.models import Recipe, Favorite, FoodIntake
+from food.models import Recipe, Favorite, FoodIntake, CustomFoodIntake
 
 
 class RecipeFilter(FilterSet):
@@ -38,6 +38,14 @@ class FoodIntakeFilter(FilterSet):
 
     class Meta:
         model = FoodIntake
+        fields = {
+            "course_day__id": ['exact'],
+        }
+
+class CustomFoodIntakeFilter(FilterSet):
+
+    class Meta:
+        model = CustomFoodIntake
         fields = {
             "course_day__id": ['exact'],
         }
