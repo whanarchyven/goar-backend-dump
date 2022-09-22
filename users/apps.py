@@ -7,5 +7,5 @@ class UserConfig(AppConfig):
     verbose_name = "Пользователи"
 
     def ready(self):
-        from .signals import create_user_cart
+        from .signals import create_user_cart, log_user_logged_in_success
 

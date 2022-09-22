@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-from .models import FitnessUser
+from .models import FitnessUser, UserLoginActivity
 
 admin.site.site_header = "Метод Гоар"
 admin.site.site_title = "Метод Гоар"
@@ -46,3 +46,7 @@ class FitnessUserAdmin(BaseUserAdmin):
 
 # admin.site.unregister(User)
 admin.site.register(User, FitnessUserAdmin)
+
+@admin.register(UserLoginActivity)
+class UserLoginActivityAdmin(admin.ModelAdmin):
+    pass

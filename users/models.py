@@ -2,7 +2,9 @@ from datetime import datetime
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator
 from django.db import models
+
 
 def _image_path(instance, filename):
     return 'user/{}/{}/{}/{}/{}'.format(
@@ -12,6 +14,7 @@ def _image_path(instance, filename):
         datetime.now().strftime("%H%M"),
         filename
     )
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -86,6 +89,15 @@ class FitnessUser(AbstractUser):
 
 class Profile(models.Model):
     """Профиль пользователя."""
+    GENDER_CHOICES = [
+        ('male', 'Мужской'),
+        ('female', 'Женский'),
+    ]
+    PHYSICAL_ACTIVITY_CHOICES = [
+        ('lazy', 'Мало'),
+        ('normal', 'Нормально'),
+        ('sport', 'Спорт'),
+    ]
     user = models.OneToOneField(
         FitnessUser,
         on_delete=models.CASCADE,
@@ -105,6 +117,16 @@ class Profile(models.Model):
     daily_calorie_intake = models.IntegerField("Суточная норма ккал", null=True, blank=True)
     daily_water_intake = models.FloatField("Суточная норма воды, мл", null=True, blank=True)
     daily_step_rate = models.FloatField("Суточная норма шагов", null=True, blank=True)
+    gender = models.CharField("Пол", null=True, blank=True, choices=GENDER_CHOICES, max_length=6)
+    height = models.PositiveIntegerField("Рост", null=True, blank=True)
+    physical_activity = models.CharField(
+        "Физическая активность",
+        null=True,
+        blank=True,
+        choices=PHYSICAL_ACTIVITY_CHOICES,
+        max_length=6
+    )
+    age = models.PositiveIntegerField("Возраст", null=True, blank=True, validators=[MaxValueValidator(120), ])
 
     def __str__(self):
         return self.user.email
@@ -113,3 +135,21 @@ class Profile(models.Model):
         verbose_name = "Профиль"
         verbose_name_plural = "Профиль"
 
+
+class UserLoginActivity(models.Model):
+    # Login Status
+    SUCCESS = 'S'
+    FAILED = 'F'
+
+    LOGIN_STATUS = ((SUCCESS, 'Success'),
+                    (FAILED, 'Failed'))
+
+    login_IP = models.GenericIPAddressField(null=True, blank=True)
+    login_datetime = models.DateTimeField(auto_now=True)
+    login_email = models.CharField(max_length=40, null=True, blank=True)
+    status = models.CharField(max_length=1, default=SUCCESS, choices=LOGIN_STATUS, null=True, blank=True)
+    user_agent_info = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Активность пользователя'
+        verbose_name_plural = 'Активность пользователя'
