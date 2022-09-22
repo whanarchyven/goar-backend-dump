@@ -80,7 +80,7 @@ class ProfilePhotoAfterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'photo_before',
+            'photo_after',
             'user'
         ]
 
