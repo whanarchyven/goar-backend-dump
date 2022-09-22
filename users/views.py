@@ -11,7 +11,8 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from users.models import Profile
 from users.permissions import IsProfileOwner
-from users.serialisers import UserSerializer, ProfileSerializer, RegistrationSerializer, ProfileImageSerializer
+from users.serialisers import UserSerializer, ProfileSerializer, RegistrationSerializer, ProfileImageSerializer, \
+    ProfilePhotoBeforeSerializer
 from users.utils import send_new_user_email
 
 User = get_user_model()
@@ -61,6 +62,19 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
             serializer_class=ProfileImageSerializer)
     def update_profile_image(self, request):
         """Обновляет фото профиля. """
+        profile = request.user.profile
+        serializer = self.serializer_class(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+    @action(detail=False, methods=["post"],
+            url_path="update-photo-before",
+            permission_classes=(IsAuthenticated, ),
+            serializer_class=ProfilePhotoBeforeSerializer)
+    def update_photo_before(self, request):
+        """Обновляет фото до. """
         profile = request.user.profile
         serializer = self.serializer_class(profile, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
